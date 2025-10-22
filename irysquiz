@@ -1,373 +1,2129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>IRYS QUIZ ARENA</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    :root { --glow: 0 8px 30px rgba(45,212,191,0.12); }
-    body { background: linear-gradient(180deg, #071018 0%, #050708 100%); }
-    .neon { filter: drop-shadow(0 6px 18px rgba(45,212,191,0.18)); }
-    .card { backdrop-filter: blur(6px); }
-    .circle-wrap { width: 150px; height: 150px; }
-    @media (min-width: 1024px) { .circle-wrap { width: 180px; height: 180px; } }
-    /* ensure buttons don't cause page jump on mobile */
-    button { -webkit-tap-highlight-color: transparent; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McDonald's - Official Website</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+/* Global Styles */
+:root {
+    --mcd-red: #ff0000;
+    --mcd-yellow: #ffc72c;
+    --mcd-dark: #27251f;
+    --mcd-light: #f7f7f7;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--mcd-light);
+    color: var(--mcd-dark);
+}
+
+/* Header Styles */
+header {
+    background-color: var(--mcd-red);
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    height: 50px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-left: 25px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--mcd-yellow);
+}
+
+/* Active tab link style (moved from media query) */
+header nav a.active {
+    background: #f2f2f2;
+    color: #111;
+    border-radius: 8px;
+}
+
+.cart-icon {
+    position: relative;
+    cursor: pointer;
+}
+
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: var(--mcd-yellow);
+    color: var(--mcd-dark);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.user-info {
+    color: white;
+    margin-right: 15px;
+    display: none;
+}
+
+.user-info span {
+    color: var(--mcd-yellow);
+    font-weight: bold;
+}
+
+/* Login Modal */
+.login-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1001;
+    width: 90%;
+    max-width: 400px;
+    display: none;
+}
+
+.login-modal.active {
+    display: block;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-header h2 {
+    color: var(--mcd-red);
+    margin-bottom: 10px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form label {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.login-form input {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.login-form button {
+    background-color: var(--mcd-red);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.login-form button:hover {
+    background-color: #e50000;
+}
+
+.login-error {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+}
+
+.login-links {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login-links a {
+    color: var(--mcd-red);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Signup Modal */
+.signup-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1001;
+    width: 90%;
+    max-width: 400px;
+    display: none;
+}
+
+.signup-modal.active {
+    display: block;
+}
+
+.signup-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.signup-header h2 {
+    color: var(--mcd-red);
+    margin-bottom: 10px;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.signup-form label {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.signup-form input {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.signup-form button {
+    background-color: var(--mcd-red);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.signup-form button:hover {
+    background-color: #e50000;
+}
+
+.signup-error {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+}
+
+.signup-success {
+    color: green;
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+}
+
+.signup-links {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.signup-links a {
+    color: var(--mcd-red);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.password-requirements {
+    font-size: 12px;
+    color: #666;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+/* Hero Section */
+.hero {
+    height: 500px;
+    background-image: url('https://tse1.mm.bing.net/th/id/OIP.DngIR4zfla_FqyyUuBV1tAHaEK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.hero-content {
+    background-color: rgba(0,0,0,0.6);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: var(--mcd-yellow);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--mcd-red);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    background-color: var(--mcd-yellow);
+    color: var(--mcd-dark);
+    transform: translateY(-3px);
+}
+
+/* Menu Section */
+.menu-section {
+    max-width: 1200px;
+    margin: 0 auto 50px;
+    padding: 0 20px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    color: var(--mcd-red);
+    display: inline-block;
+    background-color: var(--mcd-light);
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.section-title::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--mcd-red);
+    z-index: 0;
+}
+
+.menu-categories {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--mcd-dark);
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.category-btn.active, .category-btn:hover {
+    color: var(--mcd-red);
+    border-bottom: 3px solid var(--mcd-red);
+}
+
+.menu-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.menu-item {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.menu-item:hover {
+    transform: translateY(-10px);
+}
+
+.item-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.menu-item:hover .item-image img {
+    transform: scale(1.1);
+}
+
+.item-info {
+    padding: 20px;
+}
+
+.item-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: var(--mcd-dark);
+}
+
+.item-info p {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.item-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--mcd-red);
+}
+
+.add-to-cart {
+    background-color: var(--mcd-yellow);
+    color: var(--mcd-dark);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.add-to-cart:hover {
+    background-color: var(--mcd-red);
+    color: white;
+}
+
+/* Cart Modal */
+.cart-modal {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background-color: white;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    transition: right 0.3s;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.cart-modal.active {
+    right: 0;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.cart-items {
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    display: flex;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.cart-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.cart-item-details h4 {
+    margin-bottom: 5px;
+}
+
+.cart-item-price {
+    color: var(--mcd-red);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-btn {
+    background-color: #eee;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity {
+    margin: 0 10px;
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.cart-total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--mcd-red);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.checkout-btn:hover {
+    background-color: var(--mcd-dark);
+}
+
+/* Transaction History */
+.transaction-history {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    display: none;
+}
+
+.transaction-history h3 {
+    margin-bottom: 15px;
+    color: var(--mcd-red);
+}
+
+.transaction-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-date {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.transaction-items {
+    margin: 5px 0;
+}
+
+.transaction-total {
+    font-weight: bold;
+    color: var(--mcd-red);
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Info Pages */
+.info-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.info-page h2 {
+    color: var(--mcd-red);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.info-page h3 {
+    color: var(--mcd-dark);
+    margin: 20px 0 10px;
+}
+
+.info-page p, .info-page ul {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.info-page ul {
+    padding-left: 20px;
+}
+
+.info-page li {
+    margin-bottom: 8px;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--mcd-red);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    background-color: var(--mcd-dark);
+    color: white;
+    padding: 50px 0 20px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.footer-logo {
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+.footer-links h3 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--mcd-yellow);
+}
+
+.footer-links ul {
+    list-style: none;
+}
+
+.footer-links ul li {
+    margin-bottom: 10px;
+}
+
+.footer-links ul li a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+    color: var(--mcd-yellow);
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    color: white;
+    font-size: 1.5rem;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: var(--mcd-yellow);
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+    color: #999;
+    font-size: 14px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+    }
+    nav ul {
+        margin-top: 15px;
+    }
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .menu-items {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    .cart-modal {
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav ul li {
+        margin-left: 15px;
+    }
+    .hero {
+        height: 400px;
+    }
+    .menu-items {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tab Styles */
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* Deals Section Specific Styles */
+.deals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.deal-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.deal-item img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.deal-item .deal-info {
+    padding: 1rem;
+}
+
+.deal-item h3 {
+    margin-bottom: 0.5rem;
+}
+
+.deal-item .deal-price {
+    font-weight: bold;
+    color: #d32f2f;
+    margin-bottom: 0.5rem;
+}
+
+.deal-item .original-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.deal-item .btn {
+    background: #d32f2f;
+    color: #fff;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+}
+
+.app-promo {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.app-promo h3 {
+    margin-bottom: 0.5rem;
+}
+
+.app-promo .app-btn {
+    background: #ffc107;
+    color: #000;
+    font-weight: bold;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+/* Locations Section Specific Styles */
+.map-container {
+    margin: 1rem 0;
+}
+
+.locations-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.location-item {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.location-item .direction-link {
+    color: #d32f2f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.more-locations {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+/* About Section Specific Styles */
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.about-item {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.about-item ul {
+    padding-left: 20px;
+}
+
+.about-more-info {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.about-more-info img {
+    width: 80px;
+    margin-bottom: 0.5rem;
+}
+
+/* Contact Section Specific Styles */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.contact-item {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.contact-item .social-links-contact {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.contact-item .social-links-contact a {
+    text-decoration: none;
+    color: var(--mcd-dark);
+}
+
+#contact-form {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 680px;
+}
+
+#contact-form label {
+    display: block;
+}
+
+#contact-form input[type="text"],
+#contact-form input[type="email"],
+#contact-form textarea {
+    width: 100%;
+    padding: 0.65rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#contact-form .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+#contact-form .btn {
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#contact-form .secondary-btn {
+    text-decoration: none;
+    padding: 0.7rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    color: var(--mcd-dark);
+}
+
+#contact-success {
+    display: none;
+    margin-top: 0.5rem;
+    color: green;
+    font-weight: 600;
+}
+
+.faqs {
+    margin-top: 1.5rem;
+    max-width: 780px;
+}
+
+.faqs details {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.faqs summary {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.faqs p {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+}
+    </style>
 </head>
-<body class="min-h-screen text-gray-200 font-sans p-4">
-  <div class="max-w-xl mx-auto">
-    <header class="flex items-center gap-3 mb-6">
-      <!-- replace irys-logo.jpg with your logo file -->
-      <img src="https://irysquizarena.xo.je/irys-logo.jpg" alt="Irys Logo" class="w-12 h-12 rounded-full bg-white/10 p-1 neon" />
-      <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-emerald-300 neon">IRYS QUIZ ARENA</h1>
+<body>
+    <!-- Login Modal -->
+    <div class="login-modal" id="login-modal">
+        <div class="login-header">
+            <h2>Login to McDonald's</h2>
+            <p>Enter your credentials to continue</p>
+        </div>
+        <form class="login-form" id="login-form">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+            
+            <button type="submit">Login</button>
+            <div class="login-error" id="login-error">Invalid email or password. Please try again.</div>
+        </form>
+        <div class="login-links">
+            <a id="forgot-password-link" href="#">Forgot Password?</a> | <a id="show-signup-link" href="#">Create Account</a>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="signup-modal" id="signup-modal">
+        <div class="signup-header">
+            <h2>Create an Account</h2>
+            <p>Join McDonald's rewards program</p>
+        </div>
+        <form class="signup-form" id="signup-form">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" name="name" required placeholder="Enter your full name">
+            
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" name="email" required placeholder="Enter your email">
+            
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" name="password" required placeholder="Create a password">
+            <div class="password-requirements">Password must be at least 6 characters long</div>
+            
+            <label for="signup-confirm-password">Confirm Password</label>
+            <input type="password" id="signup-confirm-password" name="confirm-password" required placeholder="Confirm your password">
+            
+            <button type="submit">Create Account</button>
+            <div class="signup-error" id="signup-error">Please check your information and try again.</div>
+            <div class="signup-success" id="signup-success">Account created successfully! You can now login.</div>
+        </form>
+        <div class="signup-links">
+            Already have an account? <a id="show-login-link" href="#">Login</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <img src="https://www.bing.com/th/id/OIP.72E59kNKgzAR4nJ5x0ZDHQHaEK?w=276&h=211&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" alt="McDonald's Logo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="#menu" class="active" aria-selected="true">Menu</a></li>
+                    <li><a href="#deals">Deals</a></li>
+                    <li><a href="#locations">Locations</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#" id="login-link">Login</a></li>
+                </ul>
+            </nav>
+            <div class="user-info" id="user-info">
+                Welcome, <span id="user-name">User</span>
+            </div>
+            <div class="cart-icon" id="cart-icon">
+                🛒
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+        </div>
     </header>
 
-    <main class="bg-white/5 rounded-2xl p-6 card shadow-lg" id="app">
-      <div id="intro" class="space-y-4">
-        <p class="text-sm text-gray-300">Each session will give you 10 random questions. <br>
-        Enter your Discord info (optional)<br> 
-      Save then start quiz.</p>
-
-        <!-- Discord inputs above start button (editable any time) -->
-        <div class="flex gap-3 flex-col sm:flex-row">
-          <input id="discordName" placeholder="Discord username (optional)" class="p-3 rounded-lg bg-white/5 placeholder:text-gray-400 focus:outline-none" />
-          <select id="discordRole" class="p-3 rounded-lg bg-white/5 focus:outline-none">
-             <option value="">Select Discord Role</option>
-             <option value="Junior">Junior</option>
-            <option value="Denshi">Denshi</option>
-            <option value="Shugo">Shugo</option>
-            <option value="Senshi">Senshi</option>
-            <option value="Shihan">Shihan</option>
-          </select>
-          <button id="saveFooter" class="px-4 py-2 rounded-lg bg-white/6 hover:scale-[1.02] transition">Save</button>
+    <!-- Hero Section (Global) -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Try Our New Big Mac®</h1>
+            <p>The one and only McDonald's Big Mac® - two 100% pure beef patties and Big Mac® sauce sandwiched between a sesame seed bun.</p>
+            <a href="#menu" class="btn">Order Now</a>
         </div>
+    </section>
 
-        <!-- Start quiz button -->
-        <div class="flex justify-center mt-6">
-          <button id="startBtn" class="px-6 py-3 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-400 text-black font-semibold hover:scale-[1.05] transition">Start Quiz</button>
-        </div>
-      </div>
+    <main id="tab-root" tabindex="-1">
+        <!-- Menu Section -->
+        <section id="menu" class="tab-pane active">
+            <div class="section-title">
+                <h2>Our Menu</h2>
+            </div>
+            <div class="menu-categories">
+                <button class="category-btn active" data-category="all">All Items</button>
+                <button class="category-btn" data-category="burgers">Burgers</button>
+                <button class="category-btn" data-category="chicken">Chicken</button>
+                <button class="category-btn" data-category="fries">Fries & Sides</button>
+                <button class="category-btn" data-category="drinks">Drinks</button>
+                <button class="category-btn" data-category="desserts">Desserts</button>
+                <button class="category-btn" data-category="breakfast">Breakfast</button>
+            </div>
+            <div class="menu-items" id="menu-items">
+                <!-- Menu items will be added dynamically with JavaScript -->
+            </div>
+        </section>
 
-      <!-- Quiz view -->
-      <div id="quiz" class="hidden">
-        <div class="flex justify-between items-center mb-4">
-          <div class="text-sm text-gray-300">Question <span id="qIndex">1</span> / 10</div>
-          <div class="text-sm text-gray-300">Progress: <span id="progressText">0%</span></div>
-        </div>
+        <!-- DEALS TAB -->
+        <section id="deals" class="tab-pane">
+            <h2>Exclusive Deals & Offers</h2>
+            <p>Save big on your favorites! These combo deals are available for a limited time.</p>
 
-        <div class="bg-white/6 p-4 rounded-lg mb-4">
-          <div id="questionText" class="text-lg font-medium text-white/90"></div>
-        </div>
+            <div class="deals-grid">
+                <!-- Big Mac Combo -->
+                <div class="deal-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/62/Big_Mac_hamburger.jpg" alt="Big Mac Combo">
+                    <div class="deal-info">
+                        <h3>Big Mac® Combo</h3>
+                        <p>Big Mac®, medium fries, and a drink.</p>
+                        <p class="deal-price">₦7,500 <span class="original-price">₦9,000</span></p>
+                        <a href="#menu" class="btn">Order Now</a>
+                    </div>
+                </div>
 
-        <div id="options" class="grid gap-3"></div>
+                <!-- 10-pc Nuggets Combo -->
+                <div class="deal-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Chicken_McNuggets.jpg" alt="Chicken McNuggets Combo">
+                    <div class="deal-info">
+                        <h3>10-pc Chicken McNuggets® Combo</h3>
+                        <p>10 nuggets, medium fries, and a drink.</p>
+                        <p class="deal-price">₦6,500 <span class="original-price">₦8,000</span></p>
+                        <a href="#menu" class="btn">Order Now</a>
+                    </div>
+                </div>
 
-        <div class="flex gap-2 mt-4 justify-between">
-          <button id="prevBtn" class="px-4 py-2 rounded-lg bg-white/6 text-black font-semibold hover:opacity-90 transition hidden">Previous</button>
-          <button id="nextBtn" class="ml-auto px-4 py-2 rounded-lg bg-gradient-to-r from-sky-400 to-emerald-400 text-black font-semibold hover:scale-[1.02] transition">Next</button>
-        </div>
-      </div>
+                <!-- Breakfast Combo -->
+                <div class="deal-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Egg_McMuffin.jpg" alt="Breakfast Combo">
+                    <div class="deal-info">
+                        <h3>Breakfast Combo</h3>
+                        <p>Egg McMuffin®, hash browns, and hot coffee.</p>
+                        <p class="deal-price">₦5,200 <span class="original-price">₦6,200</span></p>
+                        <a href="#menu" class="btn">Order Now</a>
+                    </div>
+                </div>
 
-      <!-- Result -->
-      <div id="result" class="hidden text-center space-y-4">
-        <div class="inline-block rounded-full p-4 bg-white/6">
-          <div class="circle-wrap mx-auto mb-2" id="circleWrap"></div>
-          <div id="scoreLarge" class="text-2xl font-bold"></div>
-          <div id="percentLarge" class="text-sm text-emerald-300"></div>
-        </div>
+                <!-- Double Cheeseburger Combo -->
+                <div class="deal-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Double_cheeseburger.jpg" alt="Double Cheeseburger Combo">
+                    <div class="deal-info">
+                        <h3>Double Cheeseburger Combo</h3>
+                        <p>Double cheeseburger, small fries, and a drink.</p>
+                        <p class="deal-price">₦6,100 <span class="original-price">₦7,100</span></p>
+                        <a href="#menu" class="btn">Order Now</a>
+                    </div>
+                </div>
 
-        <p id="summaryText" class="text-gray-300">Solid foundation in Zero-Knowledge concepts</p>
+                <!-- Fries & McFlurry Combo -->
+                <div class="deal-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/McFlurry_with_OREO.jpg" alt="McFlurry and Fries">
+                    <div class="deal-info">
+                        <h3>Treat Duo</h3>
+                        <p>McFlurry® with OREO® and fries.</p>
+                        <p class="deal-price">₦3,800 <span class="original-price">₦5,200</span></p>
+                        <a href="#menu" class="btn">Order Now</a>
+                    </div>
+                </div>
+            </div>
 
-        <div class="grid grid-cols-2 gap-3 mt-2">
-          <div class="p-4 rounded-lg bg-emerald-900/10 text-emerald-300">
-            <div id="correctCount" class="text-2xl font-bold">0</div>
-            <div class="text-xs text-gray-300">Correct</div>
-          </div>
-          <div class="p-4 rounded-lg bg-red-900/10 text-red-400">
-            <div id="incorrectCount" class="text-2xl font-bold">0</div>
-            <div class="text-xs text-gray-300">Incorrect</div>
-          </div>
-        </div>
+            <div class="app-promo">
+                <h3>🎁 Download Our App for More Deals!</h3>
+                <a href="#" class="btn app-btn">Get the App</a>
+            </div>
+        </section>
 
-        <div class="mt-4">
-          <a id="tweetBtn" target="_blank" class="inline-block px-5 py-2 rounded-lg bg-sky-600 font-semibold hover:opacity-90 transition">Tweet your score</a>
-        </div>
+        <!-- ====== LOCATIONS TAB ====== -->
+        <section id="locations" class="tab-pane">
+            <h2>Find a McDonald's Near You</h2>
+            <p>We're closer than you think! Visit one of our locations for your favorite meals.</p>
 
-        <div class="mt-3 text-sm text-gray-400">10 of 10 questions attempted</div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31692.96972758785!2d3.3792056568478997!3d6.524379317085058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103bf55e6cfad621%3A0x62df4bbd1b47b8!2sMcDonald's!5e0!3m2!1sen!2sng!4v1685712345678" width="100%" height="380" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
 
-        <div class="mt-4">
-          <button id="retryBtn" class="px-4 py-2 rounded-lg bg-white/6 font-semibold">Play Again</button>
-        </div>
-      </div>
+            <div class="locations-list">
+                <div class="location-item">
+                    <h3>McDonald's Ikeja City Mall</h3>
+                    <p><strong>Address:</strong> Ikeja City Mall, Lagos, Nigeria</p>
+                    <p><strong>Hours:</strong> Mon–Sun: 7:00 AM – 11:00 PM</p>
+                    <p><strong>Phone:</strong> +234 701 234 5678</p>
+                    <a href="https://goo.gl/maps/abcd" target="_blank" class="direction-link">Get Directions →</a>
+                </div>
+                <div class="location-item">
+                    <h3>McDonald's Victoria Island</h3>
+                    <p><strong>Address:</strong> Ahmadu Bello Way, Victoria Island, Lagos</p>
+                    <p><strong>Hours:</strong> Mon–Sun: 6:30 AM – Midnight</p>
+                    <p><strong>Phone:</strong> +234 703 987 6543</p>
+                    <a href="https://goo.gl/maps/efgh" target="_blank" class="direction-link">Get Directions →</a>
+                </div>
+                <div class="location-item">
+                    <h3>McDonald's Abuja Central</h3>
+                    <p><strong>Address:</strong> Central Business District, Abuja</p>
+                    <p><strong>Hours:</strong> Mon–Sun: 7:00 AM – 11:30 PM</p>
+                    <p><strong>Phone:</strong> +234 802 123 4567</p>
+                    <a href="https://goo.gl/maps/ijkl" target="_blank" class="direction-link">Get Directions →</a>
+                </div>
+            </div>
+
+            <div class="more-locations">
+                <a href="https://www.mcdonalds.com/us/en-us/restaurant-locator.html" target="_blank" class="btn">Find More Locations</a>
+            </div>
+        </section>
+
+        <!-- ====== ABOUT TAB ====== -->
+        <section id="about" class="tab-pane">
+            <h2>About McDonald's</h2>
+            <p>Since 1955, McDonald's has been serving smiles with our iconic burgers, fries, and more. We are the world's leading global foodservice retailer with over 38,000 locations across more than 100 countries. Our mission is simple: deliver delicious food quickly and conveniently while maintaining top quality and outstanding customer service.</p>
+
+            <div class="about-grid">
+                <div class="about-item">
+                    <h3>Our Vision</h3>
+                    <p>To be the favorite place and way for people to enjoy their meals by combining innovation, affordability, and unmatched service.</p>
+                </div>
+                <div class="about-item">
+                    <h3>Our Values</h3>
+                    <ul>
+                        <li>Quality & Freshness</li>
+                        <li>Speed & Convenience</li>
+                        <li>Integrity in Every Bite</li>
+                        <li>Commitment to Communities</li>
+                    </ul>
+                </div>
+                <div class="about-item">
+                    <h3>Sustainability</h3>
+                    <p>We aim to reduce waste, source responsibly, and support local farmers. Our initiatives include recyclable packaging and energy-efficient restaurants.</p>
+                </div>
+            </div>
+
+            <div class="about-more-info">
+                <img src="https://www.bing.com/th/id/OIP.72E59kNKgzAR4nJ5x0ZDHQHaEK?w=276&h=211&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" alt="McDonald's Logo">
+                <p>Serving happiness for over 60 years. Want to know more about our journey?</p>
+                <a href="https://www.mcdonalds.com" target="_blank" class="btn">Learn More</a>
+            </div>
+        </section>
+
+        <!-- ====== CONTACT TAB ====== -->
+        <section id="contact" class="tab-pane">
+            <h2>Contact Us</h2>
+            <p>Got a question, feedback, or craving? Reach out — we'll be glad to help.</p>
+
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <h3>Customer Care</h3>
+                    <p><strong>Phone:</strong> <a href="tel:+2347060740970">+234 706 074 0970</a></p>
+                    <p><strong>Email:</strong> <a href="mailto:support@mcd-example.ng">support mcd@gmail.com</a></p>
+                    <p><strong>WhatsApp:</strong> <a href="https://wa.me/2347060740970" target="_blank">Chat on WhatsApp</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3>Head Office (NG)</h3>
+                    <p>Ahmadu Bello Way, Victoria Island, Lagos</p>
+                    <p><a href="https://maps.google.com/?q=Ahmadu+Bello+Way+Victoria+Island+Lagos" target="_blank">Get Directions →</a></p>
+                    <p><strong>Hours:</strong> Mon–Sun, 7:00 AM – 11:00 PM</p>
+                </div>
+                <div class="contact-item">
+                    <h3>Follow Us</h3>
+                    <p class="social-links-contact">
+                        <a href="https://www.facebook.com/mcdonalds" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/mcdonalds" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://twitter.com/mcdonalds" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.youtube.com/mcdonalds" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </p>
+                </div>
+            </div>
+
+            <form id="contact-form">
+                <label>Full Name
+                    <input type="text" name="name" required placeholder="Your name">
+                </label>
+                <label>Email
+                    <input type="email" name="email" required placeholder="you@example.com">
+                </label>
+                <label>Subject
+                    <input type="text" name="subject" required placeholder="What's this about?">
+                </label>
+                <label>Message
+                    <textarea name="message" rows="5" required placeholder="Type your message…"></textarea>
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn">Send Message</button>
+                    <a href="mailto:support@mcd-example.ng" class="btn secondary-btn">Email Instead</a>
+                </div>
+
+                <p id="contact-success" class="success-message">✅ Thanks! Your message has been received. We'll get back to you shortly.</p>
+            </form>
+
+            <div class="faqs">
+                <h3>FAQs</h3>
+                <details><summary>Do you offer delivery?</summary><p>Yes — order via our app or your favorite delivery partner in your area.</p></details>
+                <details><summary>How can I apply for a job?</summary><p>Visit the Careers page under <em>Information → Careers</em> in the footer.</p></details>
+                <details><summary>Where can I find nutrition info?</summary><p>See <em>Information → Nutrition Info</em> in the footer for detailed charts.</p></details>
+            </div>
+        </section>
+
+        <!-- Info Pages -->
+        <section id="nutrition-info" class="tab-pane info-page">
+            <a href="#" class="back-btn" onclick="window.history.back(); return false;">&larr; Back</a>
+            <h2>Nutrition Information</h2>
+            <p>At McDonald's, we're committed to providing our customers with the nutrition information they need to make informed choices about our menu items.</p>
+            
+            <h3>Our Commitment</h3>
+            <p>We provide comprehensive nutrition information for all our menu items, including calories, fat, protein, carbohydrates, and more. This information is available in our restaurants and on our website.</p>
+            
+            <h3>Nutritional Guidelines</h3>
+            <ul>
+                <li>Calorie information for all menu items</li>
+                <li>Allergen information available upon request</li>
+                <li>Options for customizing your order to meet dietary needs</li>
+                <li>Trans fat-free cooking oil for our fried items</li>
+            </ul>
+            
+            <h3>Balanced Choices</h3>
+            <p>We offer a variety of options to help you create a balanced meal, including salads, fruit, and lighter menu choices.</p>
+        </section>
+
+        <section id="about-us" class="tab-pane info-page">
+            <a href="#" class="back-btn" onclick="window.history.back(); return false;">&larr; Back</a>
+            <h2>About Us</h2>
+            <p>McDonald's is the world's leading global foodservice retailer with over 38,000 locations in over 100 countries. More than 90% of McDonald's restaurants worldwide are owned and operated by independent local business owners.</p>
+            
+            <h3>Our History</h3>
+            <p>McDonald's was founded in 1955 by Ray Kroc in Des Plaines, Illinois. Today, we serve nearly 70 million customers daily and are one of the world's most recognized brands.</p>
+            
+            <h3>Our Mission</h3>
+            <p>Our mission is to make delicious, feel-good moments easy for everyone. This is what we mean by our philosophy of "Quality, Service, Cleanliness, and Value."</p>
+            
+            <h3>Our Values</h3>
+            <ul>
+                <li>We place the customer experience at the core of all we do</li>
+                <li>We are committed to our people</li>
+                <li>We believe in the McDonald's System</li>
+                <li>We operate our business ethically</li>
+                <li>We give back to our communities</li>
+                <li>We grow our business profitably</li>
+                <li>We strive continually to improve</li>
+            </ul>
+        </section>
+
+        <section id="careers" class="tab-pane info-page">
+            <a href="#" class="back-btn" onclick="window.history.back(); return false;">&larr; Back</a>
+            <h2>Careers</h2>
+            <p>At McDonald's, we're not just making burgers - we're making careers. Join our team and discover the opportunities waiting for you.</p>
+            
+            <h3>Why Work at McDonald's?</h3>
+            <ul>
+                <li>Flexible scheduling to fit your life</li>
+                <li>Opportunities for advancement</li>
+                <li>Training and development programs</li>
+                <li>Competitive pay and benefits</li>
+                <li>Employee discounts</li>
+                <li>Scholarship opportunities</li>
+            </ul>
+            
+            <h3>Available Positions</h3>
+            <p>We offer a variety of positions, from crew member to restaurant manager and corporate roles. Visit our careers portal to see current openings.</p>
+            
+            <h3>How to Apply</h3>
+            <p>To apply for a position at McDonald's, visit our online application portal or stop by your local restaurant to fill out an application.</p>
+        </section>
+
+        <section id="franchising" class="tab-pane info-page">
+            <a href="#" class="back-btn" onclick="window.history.back(); return false;">&larr; Back</a>
+            <h2>Franchising</h2>
+            <p>McDonald's has been franchising since 1955 and has the most successful global franchise system in the world. Our franchisees are committed to delivering the outstanding quality, service, and cleanliness that our customers expect.</p>
+            
+            <h3>Why Franchise with McDonald's?</h3>
+            <ul>
+                <li>Global brand recognition</li>
+                <li>Proven business model</li>
+                <li>Comprehensive training and support</li>
+                <li>Ongoing operational support</li>
+                <li>Marketing and advertising resources</li>
+                <li>Access to supply chain network</li>
+            </ul>
+            
+            <h3>Franchise Requirements</h3>
+            <p>To become a McDonald's franchisee, you must meet certain financial requirements and be willing to participate in our comprehensive training program. We look for individuals with business experience, leadership skills, and a commitment to customer service.</p>
+            
+            <h3>How to Get Started</h3>
+            <p>If you're interested in becoming a McDonald's franchisee, visit our franchising website to learn more about the process and requirements.</p>
+        </section>
+
+        <section id="newsroom" class="tab-pane info-page">
+            <a href="#" class="back-btn" onclick="window.history.back(); return false;">&larr; Back</a>
+            <h2>Newsroom</h2>
+            <p>Stay up to date with the latest news, announcements, and stories from McDonald's.</p>
+            
+            <h3>Recent News</h3>
+            <ul>
+                <li>McDonald's Announces New Sustainability Initiatives</li>
+                <li>New Menu Items Launch Nationwide</li>
+                <li>McDonald's Partners with Local Communities for Charity Events</li>
+                <li>Restaurant Expansion Plans Announced</li>
+            </ul>
+            
+            <h3>Press Releases</h3>
+            <p>For the latest press releases and media resources, visit our corporate newsroom website.</p>
+            
+            <h3>Media Contacts</h3>
+            <p>Members of the media can contact our press office for inquiries, interviews, and additional information.</p>
+        </section>
+
+        <section id="feedback" class="tab-pane info-page">
+            <a href="#" class="back-btn" onclick="window.history.back(); return false;">&larr; Back</a>
+            <h2>Feedback</h2>
+            <p>Your feedback is important to us. It helps us improve our products, services, and overall customer experience.</p>
+            
+            <h3>How to Provide Feedback</h3>
+            <p>You can share your feedback with us in several ways:</p>
+            <ul>
+                <li>Complete our customer satisfaction survey</li>
+                <li>Speak with a restaurant manager during your visit</li>
+                <li>Contact our customer service team by phone or email</li>
+                <li>Use our mobile app to share your experience</li>
+            </ul>
+            
+            <h3>Customer Satisfaction</h3>
+            <p>We're committed to providing you with the best possible experience. If we fell short of your expectations, please let us know so we can make it right.</p>
+        </section>
+
+        <section id="get-help" class="tab-pane info-page">
+            <a href="#" class="back-btn" onclick="window.history.back(); return false;">&larr; Back</a>
+            <h2>Get Help</h2>
+            <p>We're here to help with any questions or concerns you may have about McDonald's.</p>
+            
+            <h3>Frequently Asked Questions</h3>
+            <p>Find answers to common questions about our menu, nutrition, restaurant locations, and more in our FAQ section.</p>
+            
+            <h3>Contact Us</h3>
+            <p>If you can't find what you're looking for, our customer service team is available to assist you:</p>
+            <ul>
+                <li>Phone: +234 706 074 0970</li>
+                <li>Email: support@mcdonalds.example.com</li>
+                <li>Visit: Speak with a manager at your local McDonald's restaurant</li>
+            </ul>
+            
+            <h3>Mobile App Support</h3>
+            <p>For help with our mobile app, visit the app support section in your app settings or contact our digital support team.</p>
+        </section>
+
+        <section id="privacy-policy" class="tab-pane info-page">
+            <a href="#" class="back-btn" onclick="window.history.back(); return false;">&larr; Back</a>
+            <h2>Privacy Policy</h2>
+            <p>At McDonald's, we are committed to protecting your privacy and ensuring the security of your personal information.</p>
+            
+            <h3>Information We Collect</h3>
+            <p>We may collect various types of information, including:</p>
+            <ul>
+                <li>Personal information you provide when creating an account or placing an order</li>
+                <li>Transaction information when you make a purchase</li>
+                <li>Device and usage information when you interact with our digital properties</li>
+                <li>Location information when you use our mobile app</li>
+            </ul>
+            
+            <h3>How We Use Your Information</h3>
+            <p>We use your information to:</p>
+            <ul>
+                <li>Process your orders and transactions</li>
+                <li>Provide personalized experiences and recommendations</li>
+                <li>Communicate with you about products, services, and promotions</li>
+                <li>Improve our products, services, and customer experience</li>
+                <li>Ensure the security of our systems and prevent fraud</li>
+            </ul>
+            
+            <h3>Your Choices</h3>
+            <p>You have choices about how we collect, use, and share your information. You can update your preferences in your account settings or contact us for assistance.</p>
+        </section>
     </main>
 
-    <footer class="mt-6 border-t border-white/5 pt-4 text-center text-xs text-gray-400">
-      Built with passion ❤ for the Irys community by <a href="https://x.com/Hamzo_eth" target="_blank" class="text-sky-300 font-semibold">@Hamzo_eth</a>
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cart-modal">
+        <div class="cart-header">
+            <h3>Your Order</h3>
+            <button class="close-cart" id="close-cart">×</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Cart items will be added dynamically -->
+        </div>
+        <div class="cart-total">
+            Total: ₦<span id="cart-total">0.00</span>
+        </div>
+        <button class="checkout-btn" id="checkout-btn">Checkout</button>
+        
+        <!-- Transaction History -->
+        <div class="transaction-history" id="transaction-history">
+            <h3>Transaction History</h3>
+            <div id="transaction-items">
+                <!-- Transaction items will be added dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <img src="https://th.bing.com/th/id/OIP.jTA7FJCEMswmel_b0nVHIwAAAA?w=80&h=80&c=1&bgcl=9660ee&r=0&o=7&pid=ImgRC&rm=3" alt="McDonald's Logo" class="footer-logo">
+                <p>McDonald's is the world's leading global foodservice retailer with over 38,000 locations in over 100 countries.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/mcdonalds" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/mcdonalds" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/mcdonalds" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/mcdonalds" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Menu</h3>
+                <ul>
+                    <li><a href="#menu" onclick="filterMenu('all')">All Products</a></li>
+                    <li><a href="#menu" onclick="filterMenu('burgers')">Burgers</a></li>
+                    <li><a href="#menu" onclick="filterMenu('chicken')">Chicken</a></li>
+                    <li><a href="#menu" onclick="filterMenu('breakfast')">Breakfast</a></li>
+                    <li><a href="#menu" onclick="filterMenu('desserts')">Happy Meal</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Information</h3>
+                <ul>
+                    <li><a href="#nutrition-info">Nutrition Info</a></li>
+                    <li><a href="#about-us">About Us</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#franchising">Franchising</a></li>
+                    <li><a href="#newsroom">Newsroom</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><a href="#locations">Locations</a></li>
+                    <li><a href="#feedback">Feedback</a></li>
+                    <li><a href="tel:+2347060740970">07060740970</a></li>
+                    <li><a href="#get-help">Get Help</a></li>
+                    <li><a href="#privacy-policy">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2025 McDonald's. All Rights Reserved. Group21:<ol> <li>U18CO1029</li> <li>U18CO1019</li> <li>U18CO1026</li> <li>U18CO1093</li> <li>U16CO1037</li></ol></p>
+        </div>
     </footer>
-  </div>
 
-  <script>
-    // questions.js - contains 58 Irys questions with correct answers (A/B/C/D)
-    // Each item: { q: "Question text", a: ["optA","optB","optC","optD"], correct: "A"|"B"|"C"|"D" }
-
-    window.QUESTIONS = [
-      { q: "What is the highest role in the Irys Discord?", a: ["Apprentice", "Senshi", "Shihan", "Shugo"], correct: "C" },
-      { q: "What is the first role given to new members who join the Irys Discord?", a: ["Builder", "Junior", "Senshi", "Shugo"], correct: "B" },
-      { q: "Which channel is best for casual chats and random discussions in Irys Discord?", a: ["Updates", "Announcements", "Hangout", "Support"], correct: "C" },
-      { q: "Where do new members usually complete small daily tasks or challenges?", a: ["Apprentice channel", "Dojo channel", "Builders lounge", "Meme zone"], correct: "A" },
-
-      { q: "What allows smart contracts to directly interact with stored data on Irys?", a: ["IrysSDK", "SmartLayer", "IrysVM", "StorageNode"], correct: "C" },
-      { q: "Who is the founder of Irys?", a: ["Dantashi", "Hamzo_eth", "Quang", "Josh Benaron"], correct: "D" },
-      { q: "How much total funding has Irys raised so far?", a: ["$8M", "$10M", "$20M", "$25M"], correct: "C" },
-      { q: "What is the name of the NFT featured in the Genesis Hunt campaign?", a: ["Bitomo", "Irymo", "Genomo", "Datomo"], correct: "A" },
-
-      { q: "Which wallet is required to participate in the Genesis Hunt?", a: ["MetaMask", "OKX Wallet", "Phantom Wallet", "Coinbase Wallet"], correct: "B" },
-      { q: "How many whitelist spots will be raffled in the Genesis Hunt?", a: ["200", "500", "1000", "2000"], correct: "B" },
-      { q: "How many total Genesis NFTs will exist?", a: ["1000", "1500", "2000", "5000"], correct: "C" },
-      { q: "What symbol is often used to represent Irys?", a: ["🦋", "✧ᴗ✧", "💫", "🔮"], correct: "B" },
-
-      { q: "What does Irys primarily focus on?", a: ["Decentralized storage", "NFTs", "Exchange trading", "Web2 websites"], correct: "A" },
-      { q: "What is the color of the Shihan role in the IRYS Discord server?", a: ["Yellow", "Red", "Purple", "Blue"], correct: "C" },
-      { q: "What is the color of the Senshi role in Irys Discord?", a: ["Blue", "Green", "Yellow", "Purple"], correct: "C" },
-      { q: "What does the role Shugo represent in the Irys community?", a: ["Beginners taking their first steps", "Members who help strengthen the community through deeper contributions", "Masters who guide others and shape the foundation of Irys", "Irys team developers"], correct: "B" },
-
-      { q: "What does the role Senshi represent in the Irys community?", a: ["Apprentices taking their first steps", "Practitioners who understand the basics of Irys", "Warriors and protectors of the lore", "Masters guiding others and shaping Irys"], correct: "C" },
-      { q: "What does the role Shihan represent in the Irys community?", a: ["The new members learning the basics", "The moderators who manage announcements", "The masters who guide and shape the community", "The artists who design Irys visuals"], correct: "C" },
-      { q: "What does the role Denshi represent in the Irys community?", a: ["Apprentices taking their first steps", "Practitioners who understand the foundations of the community", "Masters who guide others and shape the foundation of Irys", "Protectors of lore who challenge and refine the community"], correct: "A" },
-      { q: "Where can you claim test tokens or daily faucet rewards?", a: ["irys.xyz/faucet", "github.com", "discord DMs", "local wallet only"], correct: "A" },
-
-      { q: "What kind of content belongs in the #creators channel?", a: ["Written guides & blog drafts", "Short how-to videos", "Visuals — images, graphics, art", "Random personal DMs"], correct: "C" },
-      { q: "Which architecture does Irys use to balance speed and permanence?", a: ["Single ledger", "Multi-ledger", "Centralized server", "Sharding only"], correct: "B" },
-      { q: "What does Irys promise per block?", a: ["Random fees", "Price promise (predictable cost)", "Free minting", "Instant refunds"], correct: "B" },
-      { q: "What is Irys primarily designed for?", a: ["Token swaps", "Decentralized storage and programmable data", "Social media", "Cloud gaming"], correct: "B" },
-
-      { q: "What kind of events are regularly hosted in Irys?", a: ["Community quizzes and puzzles", "Sports competitions", "Cooking events", "Music battles"], correct: "A" },
-      { q: "What is the guiding spirit of the Irys community called?", a: ["Iryna", "Iris", "Shihan", "Sensei"], correct: "A" },
-      { q: "Which social platform is Irys verified on?", a: ["Telegram", "TikTok", "X (Twitter)", "Instagram"], correct: "C" },
-      { q: "What's discouraged in the Irys discord?", a: ["Teamwork", "Spamming", "Creativity", "Kindness"], correct: "B" },
-
-      { q: "Who can become a Shihan?", a: ["Only admins", "Those who contribute consistently", "Those on Galxe Leaderboard", "Early members"], correct: "B" },
-      { q: "What's the community greeting phrase?", a: ["Hello all", "Stay Hirys (✧ᴗ✧)", "GM fam", "WAGMI"], correct: "B" },
-      { q: "What phrase best captures Irys's essence?", a: ["Centralize everything", "Build for usability", "Focus on hype", "Trade tokens"], correct: "B" },
-      { q: "What's Irys' main purpose in Web3?", a: ["Enable smooth decentralized data flow", "Build DEX", "Run NFT marketplace", "Host memes"], correct: "A" },
-
-      { q: "What's a good way to grow in the Irys community?", a: ["Spam messages", "Stay inactive", "Engage and contribute", "Complain"], correct: "C" },
-      { q: "What platform does Irys often integrate with for campaigns?", a: ["Galxe", "Facebook", "Reddit", "YouTube"], correct: "A" },
-      { q: "What is Irys primarily known as?", a: ["A decentralized oracle network", "A layer-1 blockchain for programmable data", "A sidechain for Ethereum transactions", "A data indexing service"], correct: "B" },
-      { q: "What does 'programmable data' mean on Irys?", a: ["Data that can store only metadata", "Data that can execute embedded instructions onchain", "Data stored offchain for faster retrieval", "Data used only for temporary storage"], correct: "B" },
-
-      { q: "How does Irys ensure predictable storage pricing?", a: ["Pegging fees to Ethereum gas costs", "Basing fees on AR token volatility", "Anchoring fees to real-world HDD pricing", "Using dynamic token auctions"], correct: "C" },
-      { q: "What type of storage options does Irys offer?", a: ["Temporary only", "Permanent only", "Both permanent and term-based storage", "Cloud-based storage only"], correct: "C" },
-      { q: "What problem does Irys primarily solve for AI developers?", a: ["High compute latency", "Bridging between storage and execution layers", "GPU memory bottlenecks", "Decentralized identity"], correct: "B" },
-      { q: "What does the Irys Gateway do?", a: ["Validates miners' work", "Provides indexing, querying, and data retrieval", "Hosts decentralized apps", "Runs Proof-of-Compute"], correct: "B" },
-
-      { q: "What are 'bundlers' used for in Irys?", a: ["Combining multiple transactions into a single bundle", "Encrypting partitions", "Assigning compute tasks to AI agents", "Managing permanent storage fees"], correct: "A" },
-      { q: "What is the advantage of Irys's multi-ledger architecture?", a: ["Faster token issuance", "Prevents network congestion and improves retrieval", "Reduces miner staking requirements", "Lowers transaction fees on Ethereum"], correct: "B" },
-      { q: "What are 'Partitions' in Irys?", a: ["Miner reward pools", "Core units of data organization and verifiability", "Separate blockchains", "Execution threads"], correct: "B" },
-
-      { q: "What core problem does IrysVM solve?", a: ["Offchain computation", "Separation between storage and smart contract execution", "Miner centralization", "Token volatility"], correct: "B" },
-      { q: "What does 'Programmable Data' enable developers to do?", a: ["Store metadata faster", "Embed instructions and logic directly into data", "Use temporary databases", "Host NFTs"], correct: "B" },
-      { q: "What consensus model does Irys use?", a: ["Proof of Authority", "Proof of Work + Proof of Stake hybrid", "Delegated Proof of Stake", "Proof of Space-Time"], correct: "B" },
-      { q: "What is the purpose of the Irys Gateway?", a: ["Power compute verification", "Index, query, and retrieve onchain data", "Manage staking", "Execute VM scripts"], correct: "B" },
-
-      { q: "What ensures predictable pricing on Irys?", a: ["Token volatility tracking", "Anchoring to physical HDD pricing", "Dynamic network auctions", "DAO-set fees"], correct: "B" },
-      { q: "What are bundlers used for?", a: ["Merging multiple data transactions", "Compressing smart contracts", "Validating miners", "Generating cryptographic proofs"], correct: "A" },
-      { q: "What type of storage does Irys support?", a: ["Only temporary", "Only permanent", "Both term-based and permanent", "Offchain only"], correct: "C" },
-      { q: "What differentiates Irys from Filecoin and Arweave?", a: ["Its focus on NFTs", "Native integration of storage and execution", "Token staking mechanism", "Data sharding"], correct: "B" },
-
-      { q: "What problem does Irys solve for AI agents?", a: ["Onchain inference speed", "Lack of verifiable coordination and compute proofs", "GPU overuse", "Dataset duplication"], correct: "B" },
-      { q: "What is one good habit to participate in community events?", a: ["Ignore announcements", "Engage with events", "Never ask questions", "Only lurk"], correct: "B" }
-    ];
-
-    /* MAIN QUIZ LOGIC (index.html) - uses global QUESTIONS array from questions.js */
-    if (!window.QUESTIONS || !Array.isArray(window.QUESTIONS)) {
-      console.error('QUESTIONS array missing.');
+    <script>
+// Menu Data (Prices converted to Naira)
+const menuData = [
+    {
+        id: 1,
+        name: "Big Mac®",
+        category: "burgers",
+        price: 4500,
+        description: "The one and only McDonald's Big Mac® - two 100% pure beef patties and Big Mac® sauce sandwiched between a sesame seed bun.",
+        image: "https://tse2.mm.bing.net/th/id/OIP.XIgGF8lmnV-_964e62fckwAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    {
+        id: 2,
+        name: "Quarter Pounder® with Cheese",
+        category: "burgers",
+        price: 4800,
+        description: "Each Quarter Pounder® with Cheese burger features a ¼ lb.* of 100% fresh beef that's hot, deliciously juicy and cooked when you order.",
+        image: "https://tse2.mm.bing.net/th/id/OIP.roMn_-POMTRyiQqTsSEezQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3r"
+    },
+    {
+        id: 3,
+        name: "McChicken®",
+        category: "chicken",
+        price: 3800,
+        description: "It's a classic for a reason. Savor the satisfying crunch of our juicy chicken patty, topped with shredded lettuce and just the right amount of creamy mayonnaise, all served on a perfectly toasted bun.",
+        image: "https://th.bing.com/th/id/R.80da4f427dc4385893f4af617a1a76b7?rik=0zgMnS2qFygp3g&riu=http%3a%2f%2fmcdonalds.eg%2fCms_Data%2fContents%2fEn%2fMedia%2fimages%2fMenu%2flarge-Image%2fMcChicken.png&ehk=tYJuo5%2bTMrxsLZmTKoBw8xhg1mfM5PpEPxkQUJ7nznk%3d&risl=&pid=ImgRaw&r=0"
+    },
+    {
+        id: 4,
+        name: "Chicken McNuggets® (10 pc)",
+        category: "chicken",
+        price: 5500,
+        description: "Our tender, juicy Chicken McNuggets® are made with 100% white meat chicken and no artificial colors, flavors or preservatives.",
+        image: "https://tse3.mm.bing.net/th/id/OIP.OCSps_jd_mMMDTTxWmRSEAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    {
+        id: 5,
+        name: "World Famous Fries® (Large)",
+        category: "fries",
+        price: 2800,
+        description: "Golden on the outside, fluffy on the inside—our World Famous Fries® are cut from whole potatoes and cooked to perfection.",
+        image: "https://th.bing.com/th/id/R.1b90bf22cc1cf88d1a69ca2ddd57753d?rik=AVmEi%2bOJyB5mlg&pid=ImgRaw&r=0"
+    },
+    {
+        id: 6,
+        name: "Coca-Cola® (Medium)",
+        category: "drinks",
+        price: 1800,
+        description: "Enjoy the refreshing taste of Coca-Cola®.",
+        image: "https://th.bing.com/th/id/R.2e9bb894321f9f6e65fee3c8abbcd60d?rik=vyVvEFcOLOBHCg&riu=http%3a%2f%2fwww.freeiconspng.com%2fuploads%2fcoca-cola-drink-png-image-coca-cola-format-png-9.png&ehk=rC6DZAus5nRmReLFmR5vXEDDokATAiPbIfvBPGFJK80%3d&risl=&pid=ImgRaw&r=0"
+    },
+    {
+        id: 7,
+        name: "McFlurry® with OREO® Cookies",
+        category: "desserts",
+        price: 3200,
+        description: "The classic McFlurry® dessert with OREO® Cookies blended with our creamy vanilla soft serve.",
+        image: "https://tse3.mm.bing.net/th/id/OIP.0CO8Cx725ifWVapwX9kCQQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    {
+        id: 8,
+        name: "Apple Pie",
+        category: "desserts",
+        price: 1800,
+        description: "Our classic Apple Pie is made with 100% American-grown apples, with a lattice crust baked to perfection.",
+        image: "https://joyfoodsunshine.com/wp-content/uploads/2019/08/best-apple-pie-recipe-from-scratch-8.jpg"
+    },
+    {
+        id: 9,
+        name: "Egg McMuffin®",
+        category: "breakfast",
+        price: 2200,
+        description: "A freshly cracked Grade A egg placed on a toasted English Muffin topped with real butter, lean Canadian bacon and melty American cheese.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/d/d2/Egg_McMuffin.jpg"
+    },
+    {
+        id: 10,
+        name: "Hotcakes",
+        category: "breakfast",
+        price: 2500,
+        description: "Three golden brown hotcakes served with a side of real butter and sweet maple flavored syrup.",
+        image: "https://www.mcdonalds.com/is/image/content/dam/usa/nfl/assets/images/isolated/product/hero/Desktop_Hotcakes.jpg"
+    },
+    {
+        id: 11,
+        name: "Happy Meal® Cheeseburger",
+        category: "desserts",
+        price: 2000,
+        description: "A kid-friendly cheeseburger with a 100% beef patty, cheese, ketchup, pickules, onions, and mustard on a bun.",
+        image: "https://www.mcdonalds.com/is/image/content/dam/usa/nfl/assets/images/isolated/product/hero/Desktop_Happy-Meal-Cheeseburger.png"
     }
+];
 
-    const startBtn = document.getElementById('startBtn');
-    const intro = document.getElementById('intro');
-    const quiz = document.getElementById('quiz');
-    const result = document.getElementById('result');
-    const qIndexEl = document.getElementById('qIndex');
-    const questionText = document.getElementById('questionText');
-    const optionsWrap = document.getElementById('options');
-    const nextBtn = document.getElementById('nextBtn');
-    const prevBtn = document.getElementById('prevBtn');
-    const progressText = document.getElementById('progressText');
-    const correctCountEl = document.getElementById('correctCount');
-    const incorrectCountEl = document.getElementById('incorrectCount');
-    const scoreLarge = document.getElementById('scoreLarge');
-    const percentLarge = document.getElementById('percentLarge');
-    const tweetBtn = document.getElementById('tweetBtn');
-    const retryBtn = document.getElementById('retryBtn');
+// DOM Elements
+const menuItemsContainer = document.getElementById("menu-items");
+const cartIcon = document.getElementById("cart-icon");
+const cartModal = document.getElementById("cart-modal");
+const closeCart = document.getElementById("close-cart");
+const cartItemsContainer = document.getElementById("cart-items");
+const cartCount = document.getElementById("cart-count");
+const cartTotal = document.getElementById("cart-total");
+const checkoutBtn = document.getElementById("checkout-btn");
+const overlay = document.getElementById("overlay");
+const categoryBtns = document.querySelectorAll(".category-btn");
+const contactForm = document.getElementById("contact-form");
+const contactSuccessMessage = document.getElementById("contact-success");
+const loginModal = document.getElementById("login-modal");
+const loginForm = document.getElementById("login-form");
+const loginError = document.getElementById("login-error");
+const loginLink = document.getElementById("login-link");
+const userInfo = document.getElementById("user-info");
+const userName = document.getElementById("user-name");
+const transactionHistory = document.getElementById("transaction-history");
+const transactionItems = document.getElementById("transaction-items");
+const signupModal = document.getElementById("signup-modal");
+const signupForm = document.getElementById("signup-form");
+const signupError = document.getElementById("signup-error");
+const signupSuccess = document.getElementById("signup-success");
+const showSignupLink = document.getElementById("show-signup-link");
+const showLoginLink = document.getElementById("show-login-link");
 
-    let sessionQuestions = [];
-    let currentIndex = 0;
-    let answers = []; // stores {selected} per question index of sessionQuestions
+// User accounts and state
+let cart = [];
+let transactions = [];
+let isLoggedIn = false;
+let currentUser = null;
+let userAccounts = [
+    { email: "aminuashiru71@gmail.com", password: "1234", name: "Aminu Ashiru" }
+];
 
-    function shuffle(arr) {
-      return arr.map(v => ({ v, r: Math.random() })).sort((a, b) => a.r - b.r).map(x => x.v);
-    }
+// Display Menu Items
+function displayMenuItems(menuItems) {
+    menuItemsContainer.innerHTML = menuItems.map(item => `
+        <div class="menu-item" data-category="${item.category}">
+            <div class="item-image">
+                <img src="${item.image}" alt="${item.name}">
+            </div>
+            <div class="item-info">
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <div class="item-price">
+                    <span class="price">₦${item.price.toLocaleString()}</span>
+                    <button class="add-to-cart" data-id="${item.id}">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    `).join("");
+    
+    // Add event listeners to "Add to Cart" buttons
+    document.querySelectorAll(".add-to-cart").forEach(button => {
+        button.addEventListener("click", addToCart);
+    });
+}
 
-    function pickSessionQuestions() {
-      const pool = shuffle(window.QUESTIONS.slice());
-      return pool.slice(0, 10).map(q => JSON.parse(JSON.stringify(q))); // clone
-    }
-
-    function renderQuestion() {
-      const qObj = sessionQuestions[currentIndex];
-      qIndexEl.textContent = currentIndex + 1;
-      questionText.textContent = qObj.q;
-      optionsWrap.innerHTML = '';
-      const letters = ['A', 'B', 'C', 'D'];
-
-      qObj.a.forEach((opt, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'text-left p-3 rounded-lg bg-white/6 hover:bg-white/8 transition flex justify-between items-center';
-        btn.innerHTML = `<div class="font-medium">${letters[i]}. ${opt}</div>`;
-        btn.dataset.letter = letters[i];
-        btn.onclick = () => {
-          Array.from(optionsWrap.children).forEach(c => c.classList.remove('ring-2', 'ring-emerald-300', 'bg-white/8'));
-          btn.classList.add('ring-2', 'ring-emerald-300', 'bg-white/8');
-          // store selection in answers array at currentIndex
-          answers[currentIndex] = btn.dataset.letter;
-        };
-        optionsWrap.appendChild(btn);
-      });
-
-      // if user already selected for this q, mark selection
-      const prev = answers[currentIndex];
-      if (prev) {
-        Array.from(optionsWrap.children).forEach(c => {
-          if (c.dataset.letter === prev) c.classList.add('ring-2', 'ring-emerald-300', 'bg-white/8');
+// Add to Cart
+function addToCart(e) {
+    const id = parseInt(e.target.dataset.id);
+    const item = menuData.find(item => item.id === id);
+    
+    // Check if item already in cart
+    const existingItem = cart.find(item => item.id === id);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            ...item,
+            quantity: 1
         });
-      }
-
-      // update progress
-      const answered = answers.filter(a => !!a).length;
-      progressText.textContent = `${Math.round((currentIndex / 10) * 100)}% • ${answered}/10 answered`;
-      // prev button show/hide
-      prevBtn.classList.toggle('hidden', currentIndex === 0);
-      nextBtn.textContent = currentIndex === 9 ? 'Submit' : 'Next';
     }
+    
+    updateCart();
+}
 
-    startBtn.addEventListener('click', () => {
-      // ensure QUESTIONS exists
-      if (!window.QUESTIONS || window.QUESTIONS.length < 10) {
-        alert('Questions not loaded. Make sure questions.js is present.');
+// Update Cart
+function updateCart() {
+    // Update cart count
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    cartCount.textContent = totalItems;
+    
+    // Update cart items display
+    cartItemsContainer.innerHTML = cart.map(item => `
+        <div class="cart-item" data-id="${item.id}">
+            <div class="cart-item-image">
+                <img src="${item.image}" alt="${item.name}">
+            </div>
+            <div class="cart-item-details">
+                <h4>${item.name}</h4>
+                <div class="cart-item-price">₦${item.price.toLocaleString()}</div>
+                <div class="cart-item-quantity">
+                    <button class="quantity-btn decrease">-</button>
+                    <span class="quantity">${item.quantity}</span>
+                    <button class="quantity-btn increase">+</button>
+                </div>
+                <button class="remove-item">Remove</button>
+            </div>
+        </div>
+    `).join("");
+    
+    // Update cart total
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    cartTotal.textContent = total.toLocaleString();
+    
+    // Add event listeners to quantity buttons
+    document.querySelectorAll(".decrease").forEach(button => {
+        button.addEventListener("click", decreaseQuantity);
+    });
+    
+    document.querySelectorAll(".increase").forEach(button => {
+        button.addEventListener("click", increaseQuantity);
+    });
+    
+    document.querySelectorAll(".remove-item").forEach(button => {
+        button.addEventListener("click", removeItem);
+    });
+    
+    // Show transaction history if user is logged in
+    if (isLoggedIn) {
+        transactionHistory.style.display = 'block';
+        updateTransactionHistory();
+    } else {
+        transactionHistory.style.display = 'none';
+    }
+}
+
+// Update Transaction History
+function updateTransactionHistory() {
+    if (transactions.length === 0) {
+        transactionItems.innerHTML = '<p>No transactions yet.</p>';
         return;
-      }
-      // pick session questions
-      sessionQuestions = pickSessionQuestions();
-      answers = new Array(10).fill(null);
-      currentIndex = 0;
-      intro.classList.add('hidden');
-      quiz.classList.remove('hidden');
-      result.classList.add('hidden');
-      renderQuestion();
-      // scroll to quiz on mobile
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    }
+    
+    transactionItems.innerHTML = transactions.map(transaction => `
+        <div class="transaction-item">
+            <div class="transaction-date">${transaction.date}</div>
+            <div class="transaction-items">
+                ${transaction.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}
+            </div>
+            <div class="transaction-total">₦${transaction.total.toLocaleString()}</div>
+        </div>
+    `).join('');
+}
 
-    nextBtn.addEventListener('click', () => {
-      // if at last question -> submit (but allow submitting with unanswered if user chooses)
-      if (currentIndex === 9) {
-        // require at least an answer? (you previously required selection). we'll require user to select before moving to results.
-        if (!answers[currentIndex]) { alert('Please select an option before submitting.'); return; }
-        showResult();
+// Decrease Quantity
+function decreaseQuantity(e) {
+    const id = parseInt(e.target.closest(".cart-item").dataset.id);
+    const item = cart.find(item => item.id === id);
+    
+    if (item.quantity > 1) {
+        item.quantity -= 1;
+    } else {
+        cart = cart.filter(item => item.id !== id);
+    }
+    
+    updateCart();
+}
+
+// Increase Quantity
+function increaseQuantity(e) {
+    const id = parseInt(e.target.closest(".cart-item").dataset.id);
+    const item = cart.find(item => item.id === id);
+    item.quantity += 1;
+    updateCart();
+}
+
+// Remove Item
+function removeItem(e) {
+    const id = parseInt(e.target.closest(".cart-item").dataset.id);
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
+
+// Filter Menu by Category
+function filterMenu(category) {
+    // Update active button
+    categoryBtns.forEach(btn => btn.classList.remove("active"));
+    document.querySelector(`.category-btn[data-category="${category}"]`).classList.add("active");
+    
+    if (category === "all") {
+        displayMenuItems(menuData);
+    } else {
+        const filteredItems = menuData.filter(item => item.category === category);
+        displayMenuItems(filteredItems);
+    }
+    
+    // Show the menu tab
+    showTabByHash('#menu');
+}
+
+// Checkout
+function checkout() {
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
         return;
-      }
-      if (!answers[currentIndex]) { alert('Please select an option to continue.'); return; }
-      currentIndex++;
-      renderQuestion();
-    });
-
-    prevBtn.addEventListener('click', () => {
-      if (currentIndex === 0) return;
-      currentIndex--;
-      renderQuestion();
-    });
-
-    function showResult() {
-      // compute score
-      const correctCount = sessionQuestions.reduce((sum, q, i) => {
-        const sel = answers[i];
-        if (!sel) return sum;
-        if (sel === q.correct) return sum + 1;
-        return sum;
-      }, 0);
-
-      const incorrectCount = 10 - correctCount;
-      const percent = Math.round((correctCount / 10) * 100);
-
-      correctCountEl.textContent = correctCount;
-      incorrectCountEl.textContent = incorrectCount;
-      scoreLarge.textContent = `${correctCount} / 10`;
-      percentLarge.textContent = `${percent}%`;
-      drawCircle(percent);
-
-      // prepare tweet link
-      const discordName = document.getElementById('discordName').value || '';
-      const discordRole = document.getElementById('discordRole').value || '';
-      const tweetText = encodeURIComponent(`I scored ${percent}% (${correctCount}/10) on the IRYS QUIZ ARENA! ${discordName ? 'Discord:' + discordName : ''} ${discordRole ? 'Role:' + discordRole : ''} #IRYS`);
-      tweetBtn.href = `https://twitter.com/intent/tweet?text=${tweetText}`;
-
-      // show which were correct/incorrect — optionally you can add a review screen (not required now)
-      quiz.classList.add('hidden');
-      result.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
-    function drawCircle(percent) {
-      const size = (window.innerWidth > 1024) ? 180 : 150;
-      const stroke = 12;
-      const r = (size - stroke) / 2;
-      const c = 2 * Math.PI * r;
-      const filled = (percent / 100) * c;
-      const svg = `
-        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-          <defs>
-            <linearGradient id="g1" x1="0%" x2="100%">
-              <stop offset="0%" stop-color="#34d399" />
-              <stop offset="100%" stop-color="#60a5fa" />
-            </linearGradient>
-          </defs>
-          <g transform="translate(${size / 2},${size / 2})">
-            <circle r="${r}" cx="0" cy="0" fill="none" stroke="#111827" stroke-width="${stroke}" />
-            <circle r="${r}" cx="0" cy="0" fill="none" stroke="url(#g1)" stroke-width="${stroke}"
-              stroke-dasharray="${filled} ${c - filled}" stroke-linecap="round" transform="rotate(-90)" />
-            <text x="0" y="6" text-anchor="middle" font-size="20" fill="#fff" font-weight="700">${percent}%</text>
-          </g>
-        </svg>
-      `;
-      document.getElementById('circleWrap').innerHTML = svg;
+    
+    // Calculate total
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    // Add to transactions if logged in
+    if (isLoggedIn) {
+        const transaction = {
+            date: new Date().toLocaleString(),
+            items: [...cart],
+            total: total
+        };
+        transactions.push(transaction);
     }
+    
+    alert(`Order placed! Total: ₦${total.toLocaleString()}\nThank you for choosing McDonald's!`);
+    cart = [];
+    updateCart();
+    closeCartModal();
+}
 
-    // Save footer info (localStorage)
-    document.getElementById('saveFooter').onclick = () => {
-      const n = document.getElementById('discordName').value;
-      const r = document.getElementById('discordRole').value;
-      localStorage.setItem('irys_discord_name', n);
-      localStorage.setItem('irys_discord_role', r);
-      alert('Saved!');
-    };
+// Open Cart Modal
+function openCartModal() {
+    cartModal.classList.add("active");
+    overlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
 
-    retryBtn.addEventListener('click', () => {
-      // reset and go back to intro
-      intro.classList.remove('hidden');
-      quiz.classList.add('hidden');
-      result.classList.add('hidden');
-      // keep saved discord values
+// Close Cart Modal
+function closeCartModal() {
+    cartModal.classList.remove("active");
+    overlay.classList.remove("active");
+    document.body.style.overflow = "auto";
+}
+
+// Open Login Modal
+function openLoginModal() {
+    loginModal.classList.add("active");
+    overlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
+// Close Login Modal
+function closeLoginModal() {
+    loginModal.classList.remove("active");
+    overlay.classList.remove("active");
+    document.body.style.overflow = "auto";
+}
+
+// Open Signup Modal
+function openSignupModal() {
+    signupModal.classList.add("active");
+    overlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
+// Close Signup Modal
+function closeSignupModal() {
+    signupModal.classList.remove("active");
+    overlay.classList.remove("active");
+    document.body.style.overflow = "auto";
+}
+
+// Handle Login
+function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    
+    // Find user account
+    const userAccount = userAccounts.find(account => account.email === email && account.password === password);
+    
+    if (userAccount) {
+        // Successful login
+        isLoggedIn = true;
+        currentUser = userAccount;
+        
+        // Update UI
+        userName.textContent = currentUser.name;
+        userInfo.style.display = 'block';
+        loginLink.textContent = 'Logout';
+        
+        // Show transaction history
+        transactionHistory.style.display = 'block';
+        updateTransactionHistory();
+        
+        alert("Login successful! Welcome back, " + currentUser.name);
+        closeLoginModal();
+    } else {
+        // Failed login
+        loginError.style.display = "block";
+    }
+}
+
+// Handle Signup
+function handleSignup(e) {
+    e.preventDefault();
+    const name = document.getElementById("signup-name").value;
+    const email = document.getElementById("signup-email").value;
+    const password = document.getElementById("signup-password").value;
+    const confirmPassword = document.getElementById("signup-confirm-password").value;
+    
+    // Hide previous errors
+    signupError.style.display = "none";
+    signupSuccess.style.display = "none";
+    
+    // Validate form
+    if (password.length < 6) {
+        signupError.textContent = "Password must be at least 6 characters long";
+        signupError.style.display = "block";
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        signupError.textContent = "Passwords do not match";
+        signupError.style.display = "block";
+        return;
+    }
+    
+    // Check if email already exists
+    if (userAccounts.some(account => account.email === email)) {
+        signupError.textContent = "An account with this email already exists";
+        signupError.style.display = "block";
+        return;
+    }
+    
+    // Create new account
+    userAccounts.push({ email, password, name });
+    
+    // Show success message
+    signupSuccess.style.display = "block";
+    
+    // Clear form
+    document.getElementById("signup-form").reset();
+    
+    // After a delay, switch to login form
+    setTimeout(() => {
+        closeSignupModal();
+        openLoginModal();
+        document.getElementById("email").value = email;
+    }, 2000);
+}
+
+// Handle Logout
+function handleLogout(e) {
+    e.preventDefault();
+    isLoggedIn = false;
+    currentUser = null;
+    
+    // Update UI
+    userInfo.style.display = 'none';
+    loginLink.textContent = 'Login';
+    
+    // Hide transaction history
+    transactionHistory.style.display = 'none';
+    
+    alert("You have been logged out.");
+}
+
+// Tab Navigation Logic
+function showTabByHash(hash) {
+    const target = document.querySelector(hash) || document.querySelector("#menu");
+    const panes = document.querySelectorAll(".tab-pane");
+    const links = document.querySelectorAll("header nav a[href^=\"#\"]");
+
+    panes.forEach(p => p.classList.toggle("active", p === target));
+    links.forEach(a => {
+        const isActive = a.getAttribute("href") === ("#" + target.id);
+        a.classList.toggle("active", isActive);
+        a.setAttribute("aria-selected", isActive ? "true" : "false");
     });
 
-    // load saved footer values on page load
-    window.addEventListener('load', () => {
-      const n = localStorage.getItem('irys_discord_name');
-      const r = localStorage.getItem('irys_discord_role');
-      if (n) document.getElementById('discordName').value = n;
-      if (r) document.getElementById('discordRole').value = r;
+    const root = document.getElementById("tab-root");
+    if (root) root.focus();
+}
+
+// Handle form submission
+if (contactForm) {
+    contactForm.addEventListener("submit", function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Simulate form submission (e.g., send data to a server)
+        console.log("Form submitted!");
+        // In a real application, you would send the form data to a backend here
+
+        // Display success message
+        if (contactSuccessMessage) {
+            contactSuccessMessage.style.display = "block";
+        }
+
+        // Optionally clear the form
+        contactForm.reset();
+
+        // Hide success message after a few seconds
+        setTimeout(() => {
+            if (contactSuccessMessage) {
+                contactSuccessMessage.style.display = "none";
+            }
+        }, 5000);
     });
-  </script>
+}
+
+// Event Listeners
+cartIcon.addEventListener("click", openCartModal);
+closeCart.addEventListener("click", closeCartModal);
+overlay.addEventListener("click", () => {
+    closeCartModal();
+    closeLoginModal();
+    closeSignupModal();
+});
+checkoutBtn.addEventListener("click", checkout);
+loginLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    if (isLoggedIn) {
+        handleLogout(e);
+    } else {
+        openLoginModal();
+    }
+});
+loginForm.addEventListener("submit", handleLogin);
+signupForm.addEventListener("submit", handleSignup);
+showSignupLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    closeLoginModal();
+    openSignupModal();
+});
+showLoginLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    closeSignupModal();
+    openLoginModal();
+});
+
+// Category Filter Buttons
+categoryBtns.forEach(button => {
+    button.addEventListener("click", () => {
+        categoryBtns.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        filterMenu(button.dataset.category);
+    });
+});
+
+// Initialize
+displayMenuItems(menuData);
+
+// Initial tab load based on hash or default to #menu
+if (!location.hash) {
+    history.replaceState(null, "", "#menu");
+}
+showTabByHash(location.hash);
+window.addEventListener("hashchange", () => showTabByHash(location.hash));
+    </script>
 </body>
 </html>
