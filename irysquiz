@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IRYS QUIZ ARENA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --glow: 0 8px 30px rgba(45,212,191,0.12); }
+    body { background: linear-gradient(180deg, #071018 0%, #050708 100%); }
+    .neon { filter: drop-shadow(0 6px 18px rgba(45,212,191,0.18)); }
+    .card { backdrop-filter: blur(6px); }
+    .circle-wrap { width: 150px; height: 150px; }
+    @media (min-width: 1024px) { .circle-wrap { width: 180px; height: 180px; } }
+    /* ensure buttons don't cause page jump on mobile */
+    button { -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body class="min-h-screen text-gray-200 font-sans p-4">
+  <div class="max-w-xl mx-auto">
+    <header class="flex items-center gap-3 mb-6">
+      <!-- replace irys-logo.jpg with your logo file -->
+      <img src="https://irysquizarena.xo.je/irys-logo.jpg" alt="Irys Logo" class="w-12 h-12 rounded-full bg-white/10 p-1 neon" />
+      <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-emerald-300 neon">IRYS QUIZ ARENA</h1>
+    </header>
+
+    <main class="bg-white/5 rounded-2xl p-6 card shadow-lg" id="app">
+      <div id="intro" class="space-y-4">
+        <p class="text-sm text-gray-300">Each session will give you 10 random questions. <br>
+        Enter your Discord info (optional)<br> 
+      Save then start quiz.</p>
+
+        <!-- Discord inputs above start button (editable any time) -->
+        <div class="flex gap-3 flex-col sm:flex-row">
+          <input id="discordName" placeholder="Discord username (optional)" class="p-3 rounded-lg bg-white/5 placeholder:text-gray-400 focus:outline-none" />
+          <select id="discordRole" class="p-3 rounded-lg bg-white/5 focus:outline-none">
+             <option value="">Select Discord Role</option>
+             <option value="Junior">Junior</option>
+            <option value="Denshi">Denshi</option>
+            <option value="Shugo">Shugo</option>
+            <option value="Senshi">Senshi</option>
+            <option value="Shihan">Shihan</option>
+          </select>
+          <button id="saveFooter" class="px-4 py-2 rounded-lg bg-white/6 hover:scale-[1.02] transition">Save</button>
+        </div>
+
+        <!-- Start quiz button -->
+        <div class="flex justify-center mt-6">
+          <button id="startBtn" class="px-6 py-3 rounded-lg bg-gradient-to-r from-emerald-400 to-sky-400 text-black font-semibold hover:scale-[1.05] transition">Start Quiz</button>
+        </div>
+      </div>
+
+      <!-- Quiz view -->
+      <div id="quiz" class="hidden">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-sm text-gray-300">Question <span id="qIndex">1</span> / 10</div>
+          <div class="text-sm text-gray-300">Progress: <span id="progressText">0%</span></div>
+        </div>
+
+        <div class="bg-white/6 p-4 rounded-lg mb-4">
+          <div id="questionText" class="text-lg font-medium text-white/90"></div>
+        </div>
+
+        <div id="options" class="grid gap-3"></div>
+
+        <div class="flex gap-2 mt-4 justify-between">
+          <button id="prevBtn" class="px-4 py-2 rounded-lg bg-white/6 text-black font-semibold hover:opacity-90 transition hidden">Previous</button>
+          <button id="nextBtn" class="ml-auto px-4 py-2 rounded-lg bg-gradient-to-r from-sky-400 to-emerald-400 text-black font-semibold hover:scale-[1.02] transition">Next</button>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div id="result" class="hidden text-center space-y-4">
+        <div class="inline-block rounded-full p-4 bg-white/6">
+          <div class="circle-wrap mx-auto mb-2" id="circleWrap"></div>
+          <div id="scoreLarge" class="text-2xl font-bold"></div>
+          <div id="percentLarge" class="text-sm text-emerald-300"></div>
+        </div>
+
+        <p id="summaryText" class="text-gray-300">Solid foundation in Zero-Knowledge concepts</p>
+
+        <div class="grid grid-cols-2 gap-3 mt-2">
+          <div class="p-4 rounded-lg bg-emerald-900/10 text-emerald-300">
+            <div id="correctCount" class="text-2xl font-bold">0</div>
+            <div class="text-xs text-gray-300">Correct</div>
+          </div>
+          <div class="p-4 rounded-lg bg-red-900/10 text-red-400">
+            <div id="incorrectCount" class="text-2xl font-bold">0</div>
+            <div class="text-xs text-gray-300">Incorrect</div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <a id="tweetBtn" target="_blank" class="inline-block px-5 py-2 rounded-lg bg-sky-600 font-semibold hover:opacity-90 transition">Tweet your score</a>
+        </div>
+
+        <div class="mt-3 text-sm text-gray-400">10 of 10 questions attempted</div>
+
+        <div class="mt-4">
+          <button id="retryBtn" class="px-4 py-2 rounded-lg bg-white/6 font-semibold">Play Again</button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="mt-6 border-t border-white/5 pt-4 text-center text-xs text-gray-400">
+      Built with passion ❤ for the Irys community by <a href="https://x.com/Hamzo_eth" target="_blank" class="text-sky-300 font-semibold">@Hamzo_eth</a>
+    </footer>
+  </div>
+
+  <script>
+    // questions.js - contains 58 Irys questions with correct answers (A/B/C/D)
+    // Each item: { q: "Question text", a: ["optA","optB","optC","optD"], correct: "A"|"B"|"C"|"D" }
+
+    window.QUESTIONS = [
+      { q: "What is the highest role in the Irys Discord?", a: ["Apprentice", "Senshi", "Shihan", "Shugo"], correct: "C" },
+      { q: "What is the first role given to new members who join the Irys Discord?", a: ["Builder", "Junior", "Senshi", "Shugo"], correct: "B" },
+      { q: "Which channel is best for casual chats and random discussions in Irys Discord?", a: ["Updates", "Announcements", "Hangout", "Support"], correct: "C" },
+      { q: "Where do new members usually complete small daily tasks or challenges?", a: ["Apprentice channel", "Dojo channel", "Builders lounge", "Meme zone"], correct: "A" },
+
+      { q: "What allows smart contracts to directly interact with stored data on Irys?", a: ["IrysSDK", "SmartLayer", "IrysVM", "StorageNode"], correct: "C" },
+      { q: "Who is the founder of Irys?", a: ["Dantashi", "Hamzo_eth", "Quang", "Josh Benaron"], correct: "D" },
+      { q: "How much total funding has Irys raised so far?", a: ["$8M", "$10M", "$20M", "$25M"], correct: "C" },
+      { q: "What is the name of the NFT featured in the Genesis Hunt campaign?", a: ["Bitomo", "Irymo", "Genomo", "Datomo"], correct: "A" },
+
+      { q: "Which wallet is required to participate in the Genesis Hunt?", a: ["MetaMask", "OKX Wallet", "Phantom Wallet", "Coinbase Wallet"], correct: "B" },
+      { q: "How many whitelist spots will be raffled in the Genesis Hunt?", a: ["200", "500", "1000", "2000"], correct: "B" },
+      { q: "How many total Genesis NFTs will exist?", a: ["1000", "1500", "2000", "5000"], correct: "C" },
+      { q: "What symbol is often used to represent Irys?", a: ["🦋", "✧ᴗ✧", "💫", "🔮"], correct: "B" },
+
+      { q: "What does Irys primarily focus on?", a: ["Decentralized storage", "NFTs", "Exchange trading", "Web2 websites"], correct: "A" },
+      { q: "What is the color of the Shihan role in the IRYS Discord server?", a: ["Yellow", "Red", "Purple", "Blue"], correct: "C" },
+      { q: "What is the color of the Senshi role in Irys Discord?", a: ["Blue", "Green", "Yellow", "Purple"], correct: "C" },
+      { q: "What does the role Shugo represent in the Irys community?", a: ["Beginners taking their first steps", "Members who help strengthen the community through deeper contributions", "Masters who guide others and shape the foundation of Irys", "Irys team developers"], correct: "B" },
+
+      { q: "What does the role Senshi represent in the Irys community?", a: ["Apprentices taking their first steps", "Practitioners who understand the basics of Irys", "Warriors and protectors of the lore", "Masters guiding others and shaping Irys"], correct: "C" },
+      { q: "What does the role Shihan represent in the Irys community?", a: ["The new members learning the basics", "The moderators who manage announcements", "The masters who guide and shape the community", "The artists who design Irys visuals"], correct: "C" },
+      { q: "What does the role Denshi represent in the Irys community?", a: ["Apprentices taking their first steps", "Practitioners who understand the foundations of the community", "Masters who guide others and shape the foundation of Irys", "Protectors of lore who challenge and refine the community"], correct: "A" },
+      { q: "Where can you claim test tokens or daily faucet rewards?", a: ["irys.xyz/faucet", "github.com", "discord DMs", "local wallet only"], correct: "A" },
+
+      { q: "What kind of content belongs in the #creators channel?", a: ["Written guides & blog drafts", "Short how-to videos", "Visuals — images, graphics, art", "Random personal DMs"], correct: "C" },
+      { q: "Which architecture does Irys use to balance speed and permanence?", a: ["Single ledger", "Multi-ledger", "Centralized server", "Sharding only"], correct: "B" },
+      { q: "What does Irys promise per block?", a: ["Random fees", "Price promise (predictable cost)", "Free minting", "Instant refunds"], correct: "B" },
+      { q: "What is Irys primarily designed for?", a: ["Token swaps", "Decentralized storage and programmable data", "Social media", "Cloud gaming"], correct: "B" },
+
+      { q: "What kind of events are regularly hosted in Irys?", a: ["Community quizzes and puzzles", "Sports competitions", "Cooking events", "Music battles"], correct: "A" },
+      { q: "What is the guiding spirit of the Irys community called?", a: ["Iryna", "Iris", "Shihan", "Sensei"], correct: "A" },
+      { q: "Which social platform is Irys verified on?", a: ["Telegram", "TikTok", "X (Twitter)", "Instagram"], correct: "C" },
+      { q: "What's discouraged in the Irys discord?", a: ["Teamwork", "Spamming", "Creativity", "Kindness"], correct: "B" },
+
+      { q: "Who can become a Shihan?", a: ["Only admins", "Those who contribute consistently", "Those on Galxe Leaderboard", "Early members"], correct: "B" },
+      { q: "What's the community greeting phrase?", a: ["Hello all", "Stay Hirys (✧ᴗ✧)", "GM fam", "WAGMI"], correct: "B" },
+      { q: "What phrase best captures Irys's essence?", a: ["Centralize everything", "Build for usability", "Focus on hype", "Trade tokens"], correct: "B" },
+      { q: "What's Irys' main purpose in Web3?", a: ["Enable smooth decentralized data flow", "Build DEX", "Run NFT marketplace", "Host memes"], correct: "A" },
+
+      { q: "What's a good way to grow in the Irys community?", a: ["Spam messages", "Stay inactive", "Engage and contribute", "Complain"], correct: "C" },
+      { q: "What platform does Irys often integrate with for campaigns?", a: ["Galxe", "Facebook", "Reddit", "YouTube"], correct: "A" },
+      { q: "What is Irys primarily known as?", a: ["A decentralized oracle network", "A layer-1 blockchain for programmable data", "A sidechain for Ethereum transactions", "A data indexing service"], correct: "B" },
+      { q: "What does 'programmable data' mean on Irys?", a: ["Data that can store only metadata", "Data that can execute embedded instructions onchain", "Data stored offchain for faster retrieval", "Data used only for temporary storage"], correct: "B" },
+
+      { q: "How does Irys ensure predictable storage pricing?", a: ["Pegging fees to Ethereum gas costs", "Basing fees on AR token volatility", "Anchoring fees to real-world HDD pricing", "Using dynamic token auctions"], correct: "C" },
+      { q: "What type of storage options does Irys offer?", a: ["Temporary only", "Permanent only", "Both permanent and term-based storage", "Cloud-based storage only"], correct: "C" },
+      { q: "What problem does Irys primarily solve for AI developers?", a: ["High compute latency", "Bridging between storage and execution layers", "GPU memory bottlenecks", "Decentralized identity"], correct: "B" },
+      { q: "What does the Irys Gateway do?", a: ["Validates miners' work", "Provides indexing, querying, and data retrieval", "Hosts decentralized apps", "Runs Proof-of-Compute"], correct: "B" },
+
+      { q: "What are 'bundlers' used for in Irys?", a: ["Combining multiple transactions into a single bundle", "Encrypting partitions", "Assigning compute tasks to AI agents", "Managing permanent storage fees"], correct: "A" },
+      { q: "What is the advantage of Irys's multi-ledger architecture?", a: ["Faster token issuance", "Prevents network congestion and improves retrieval", "Reduces miner staking requirements", "Lowers transaction fees on Ethereum"], correct: "B" },
+      { q: "What are 'Partitions' in Irys?", a: ["Miner reward pools", "Core units of data organization and verifiability", "Separate blockchains", "Execution threads"], correct: "B" },
+
+      { q: "What core problem does IrysVM solve?", a: ["Offchain computation", "Separation between storage and smart contract execution", "Miner centralization", "Token volatility"], correct: "B" },
+      { q: "What does 'Programmable Data' enable developers to do?", a: ["Store metadata faster", "Embed instructions and logic directly into data", "Use temporary databases", "Host NFTs"], correct: "B" },
+      { q: "What consensus model does Irys use?", a: ["Proof of Authority", "Proof of Work + Proof of Stake hybrid", "Delegated Proof of Stake", "Proof of Space-Time"], correct: "B" },
+      { q: "What is the purpose of the Irys Gateway?", a: ["Power compute verification", "Index, query, and retrieve onchain data", "Manage staking", "Execute VM scripts"], correct: "B" },
+
+      { q: "What ensures predictable pricing on Irys?", a: ["Token volatility tracking", "Anchoring to physical HDD pricing", "Dynamic network auctions", "DAO-set fees"], correct: "B" },
+      { q: "What are bundlers used for?", a: ["Merging multiple data transactions", "Compressing smart contracts", "Validating miners", "Generating cryptographic proofs"], correct: "A" },
+      { q: "What type of storage does Irys support?", a: ["Only temporary", "Only permanent", "Both term-based and permanent", "Offchain only"], correct: "C" },
+      { q: "What differentiates Irys from Filecoin and Arweave?", a: ["Its focus on NFTs", "Native integration of storage and execution", "Token staking mechanism", "Data sharding"], correct: "B" },
+
+      { q: "What problem does Irys solve for AI agents?", a: ["Onchain inference speed", "Lack of verifiable coordination and compute proofs", "GPU overuse", "Dataset duplication"], correct: "B" },
+      { q: "What is one good habit to participate in community events?", a: ["Ignore announcements", "Engage with events", "Never ask questions", "Only lurk"], correct: "B" }
+    ];
+
+    /* MAIN QUIZ LOGIC (index.html) - uses global QUESTIONS array from questions.js */
+    if (!window.QUESTIONS || !Array.isArray(window.QUESTIONS)) {
+      console.error('QUESTIONS array missing.');
+    }
+
+    const startBtn = document.getElementById('startBtn');
+    const intro = document.getElementById('intro');
+    const quiz = document.getElementById('quiz');
+    const result = document.getElementById('result');
+    const qIndexEl = document.getElementById('qIndex');
+    const questionText = document.getElementById('questionText');
+    const optionsWrap = document.getElementById('options');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const progressText = document.getElementById('progressText');
+    const correctCountEl = document.getElementById('correctCount');
+    const incorrectCountEl = document.getElementById('incorrectCount');
+    const scoreLarge = document.getElementById('scoreLarge');
+    const percentLarge = document.getElementById('percentLarge');
+    const tweetBtn = document.getElementById('tweetBtn');
+    const retryBtn = document.getElementById('retryBtn');
+
+    let sessionQuestions = [];
+    let currentIndex = 0;
+    let answers = []; // stores {selected} per question index of sessionQuestions
+
+    function shuffle(arr) {
+      return arr.map(v => ({ v, r: Math.random() })).sort((a, b) => a.r - b.r).map(x => x.v);
+    }
+
+    function pickSessionQuestions() {
+      const pool = shuffle(window.QUESTIONS.slice());
+      return pool.slice(0, 10).map(q => JSON.parse(JSON.stringify(q))); // clone
+    }
+
+    function renderQuestion() {
+      const qObj = sessionQuestions[currentIndex];
+      qIndexEl.textContent = currentIndex + 1;
+      questionText.textContent = qObj.q;
+      optionsWrap.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+
+      qObj.a.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'text-left p-3 rounded-lg bg-white/6 hover:bg-white/8 transition flex justify-between items-center';
+        btn.innerHTML = `<div class="font-medium">${letters[i]}. ${opt}</div>`;
+        btn.dataset.letter = letters[i];
+        btn.onclick = () => {
+          Array.from(optionsWrap.children).forEach(c => c.classList.remove('ring-2', 'ring-emerald-300', 'bg-white/8'));
+          btn.classList.add('ring-2', 'ring-emerald-300', 'bg-white/8');
+          // store selection in answers array at currentIndex
+          answers[currentIndex] = btn.dataset.letter;
+        };
+        optionsWrap.appendChild(btn);
+      });
+
+      // if user already selected for this q, mark selection
+      const prev = answers[currentIndex];
+      if (prev) {
+        Array.from(optionsWrap.children).forEach(c => {
+          if (c.dataset.letter === prev) c.classList.add('ring-2', 'ring-emerald-300', 'bg-white/8');
+        });
+      }
+
+      // update progress
+      const answered = answers.filter(a => !!a).length;
+      progressText.textContent = `${Math.round((currentIndex / 10) * 100)}% • ${answered}/10 answered`;
+      // prev button show/hide
+      prevBtn.classList.toggle('hidden', currentIndex === 0);
+      nextBtn.textContent = currentIndex === 9 ? 'Submit' : 'Next';
+    }
+
+    startBtn.addEventListener('click', () => {
+      // ensure QUESTIONS exists
+      if (!window.QUESTIONS || window.QUESTIONS.length < 10) {
+        alert('Questions not loaded. Make sure questions.js is present.');
+        return;
+      }
+      // pick session questions
+      sessionQuestions = pickSessionQuestions();
+      answers = new Array(10).fill(null);
+      currentIndex = 0;
+      intro.classList.add('hidden');
+      quiz.classList.remove('hidden');
+      result.classList.add('hidden');
+      renderQuestion();
+      // scroll to quiz on mobile
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      // if at last question -> submit (but allow submitting with unanswered if user chooses)
+      if (currentIndex === 9) {
+        // require at least an answer? (you previously required selection). we'll require user to select before moving to results.
+        if (!answers[currentIndex]) { alert('Please select an option before submitting.'); return; }
+        showResult();
+        return;
+      }
+      if (!answers[currentIndex]) { alert('Please select an option to continue.'); return; }
+      currentIndex++;
+      renderQuestion();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex === 0) return;
+      currentIndex--;
+      renderQuestion();
+    });
+
+    function showResult() {
+      // compute score
+      const correctCount = sessionQuestions.reduce((sum, q, i) => {
+        const sel = answers[i];
+        if (!sel) return sum;
+        if (sel === q.correct) return sum + 1;
+        return sum;
+      }, 0);
+
+      const incorrectCount = 10 - correctCount;
+      const percent = Math.round((correctCount / 10) * 100);
+
+      correctCountEl.textContent = correctCount;
+      incorrectCountEl.textContent = incorrectCount;
+      scoreLarge.textContent = `${correctCount} / 10`;
+      percentLarge.textContent = `${percent}%`;
+      drawCircle(percent);
+
+      // prepare tweet link
+      const discordName = document.getElementById('discordName').value || '';
+      const discordRole = document.getElementById('discordRole').value || '';
+      const tweetText = encodeURIComponent(`I scored ${percent}% (${correctCount}/10) on the IRYS QUIZ ARENA! ${discordName ? 'Discord:' + discordName : ''} ${discordRole ? 'Role:' + discordRole : ''} #IRYS`);
+      tweetBtn.href = `https://twitter.com/intent/tweet?text=${tweetText}`;
+
+      // show which were correct/incorrect — optionally you can add a review screen (not required now)
+      quiz.classList.add('hidden');
+      result.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function drawCircle(percent) {
+      const size = (window.innerWidth > 1024) ? 180 : 150;
+      const stroke = 12;
+      const r = (size - stroke) / 2;
+      const c = 2 * Math.PI * r;
+      const filled = (percent / 100) * c;
+      const svg = `
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+          <defs>
+            <linearGradient id="g1" x1="0%" x2="100%">
+              <stop offset="0%" stop-color="#34d399" />
+              <stop offset="100%" stop-color="#60a5fa" />
+            </linearGradient>
+          </defs>
+          <g transform="translate(${size / 2},${size / 2})">
+            <circle r="${r}" cx="0" cy="0" fill="none" stroke="#111827" stroke-width="${stroke}" />
+            <circle r="${r}" cx="0" cy="0" fill="none" stroke="url(#g1)" stroke-width="${stroke}"
+              stroke-dasharray="${filled} ${c - filled}" stroke-linecap="round" transform="rotate(-90)" />
+            <text x="0" y="6" text-anchor="middle" font-size="20" fill="#fff" font-weight="700">${percent}%</text>
+          </g>
+        </svg>
+      `;
+      document.getElementById('circleWrap').innerHTML = svg;
+    }
+
+    // Save footer info (localStorage)
+    document.getElementById('saveFooter').onclick = () => {
+      const n = document.getElementById('discordName').value;
+      const r = document.getElementById('discordRole').value;
+      localStorage.setItem('irys_discord_name', n);
+      localStorage.setItem('irys_discord_role', r);
+      alert('Saved!');
+    };
+
+    retryBtn.addEventListener('click', () => {
+      // reset and go back to intro
+      intro.classList.remove('hidden');
+      quiz.classList.add('hidden');
+      result.classList.add('hidden');
+      // keep saved discord values
+    });
+
+    // load saved footer values on page load
+    window.addEventListener('load', () => {
+      const n = localStorage.getItem('irys_discord_name');
+      const r = localStorage.getItem('irys_discord_role');
+      if (n) document.getElementById('discordName').value = n;
+      if (r) document.getElementById('discordRole').value = r;
+    });
+  </script>
+</body>
+</html>
